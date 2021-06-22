@@ -23,8 +23,16 @@ from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #Client 
     path('api/client/', ListClientAPIView.as_view(), name = "list_clients"),
     path('api/client/create/', CreateClientAPIView.as_view(), name = "create_clients"),
+    #Provider
     path('api/provider/', ListProviderAPIView.as_view(), name = "list_providers"),
     path('api/provider/create/', CreateProviderAPIView.as_view(), name = "create_providers"),
+    #Item
+    path('api/item/', ListItemAPIView.as_view(), name = "list_item"),
+    path('api/item/create/', CreateItemAPIView.as_view(), name = "create_item"),
+    #ItemProvider
+    path('api/itemprovider/', ListItemProviderAPIView.as_view(), name = "list_item_providers"),
+    path('api/itemprovider/create/', CreateItemProviderAPIView.as_view(), name = "create_item_roviders"),
 ]

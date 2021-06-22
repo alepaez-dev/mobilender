@@ -30,4 +30,20 @@ class CreateProviderAPIView(generics.CreateAPIView):
   queryset = Provider.objects.all()
   serializer_class = ProviderSerializer
 
+## Item
+class ListItemAPIView(generics.ListAPIView):
+  queryset = Item.objects.all()
+  serializer_class = ItemSerializer
 
+class CreateItemAPIView(generics.CreateAPIView):
+  queryset = Item.objects.all()
+  serializer_class = CreateItemSerializer
+
+## ItemProvider
+class ListItemProviderAPIView(generics.ListAPIView):
+  queryset = ItemProvider.objects.all()
+  serializer_class = ItemProviderSerializerr
+
+class CreateItemProviderAPIView(generics.CreateAPIView):
+  queryset = ItemProvider.objects.all()
+  serializer_class = ItemProviderSerializer
