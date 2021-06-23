@@ -27,36 +27,40 @@ class ProviderSerializer(serializers.ModelSerializer):
   class Meta:
     model = Provider
     fields = [
+      "id",
       "name",
       "address"
     ]
 
 
 
-class ItemProviderSerializer(serializers.ModelSerializer):
+class ItemProviderSimpleSerializer(serializers.ModelSerializer):
   """ItemProvider"""
   # provider = ProviderSerializer()
   # item = ItemSerializer()
   class Meta:
     model = ItemProvider
-    fields = [
-      "provider",
-      "item"
-    ]
+    fields = ["provider"]
+  
+  def get_queryset(self, *args, **kwargs):
+    print("aaa",args)
+    print("bbb",kwargs)
 
 class ItemSerializer(serializers.ModelSerializer):
   """Item"""
-  items_providers = ItemProviderSerializer(many=True)
+  items_providers = ItemProviderSimpleSerializer(many=True)
   class Meta:
     model = Item
     fields = [
+      "id",
       "description",
       "price",
       "items_providers"
     ]
-class ItemProviderSerializerr(serializers.ModelSerializer):
+
+class ItemProviderSerializer(serializers.ModelSerializer):
   """ItemProvider"""
-  provider = ProviderSerializer()
+  provider = ProviderSerializer(many=True)
   item = ItemSerializer()
   class Meta:
     model = ItemProvider
@@ -65,18 +69,20 @@ class ItemProviderSerializerr(serializers.ModelSerializer):
       "item"
     ]
 
-class ItemProvider_ProviderSerializerr(serializers.ModelSerializer):
+class ItemProviderSingleArraySerializer(serializers.ModelSerializer):
   """ItemProvider"""
+  # We make it an array field so we can POST all providers IDs in one single array and not multiple objects
   provider = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True)
-  # provider = ProviderSerializer()
   class Meta:
     model = ItemProvider
     fields = [
       "provider",
     ]
+
+# We create an item with all the providers that it has
 class CreateItemSerializer(serializers.ModelSerializer):
   """Item"""
-  items_providers = ItemProvider_ProviderSerializerr()
+  items_providers = ItemProviderSingleArraySerializer(many=True)
   class Meta:
     model = Item
     fields = [
@@ -84,6 +90,22 @@ class CreateItemSerializer(serializers.ModelSerializer):
       "price",
       "items_providers"
     ]
+
   def create(self, validated_data):
     print("aqui")
-    print(validated_data)
+    items_providers = validated_data.pop("items_providers")
+    providers = items_providers[0].pop("provider")
+    
+    # We create the item
+    item = Item.objects.create(**validated_data)
+    item.save()
+    
+    # For every provider we will do an item_provider with the same item and all the providers
+    for provider in providers:
+      item_provider = ItemProvider.objects.create(item=item)
+      item_provider.save()
+      item_provider.provider.add(provider)
+    
+    return item
+
+    

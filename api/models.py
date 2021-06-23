@@ -16,13 +16,7 @@ class Client(models.Model):
   def __str__(self):
     return f"{self.name} {self.key}"
 
-class Provider(models.Model):
-  """Provider"""
-  name = models.CharField(max_length=150)
-  address = models.CharField(max_length=150)
 
-  def __str__(self):
-    return f"{self.name} {self.address}"
 
 class Item(models.Model):
   """Item"""
@@ -32,11 +26,19 @@ class Item(models.Model):
   def __str__(self):
     return f"{self.description} {self.price}"
 
+class Provider(models.Model):
+  """Provider"""
+  name = models.CharField(max_length=150)
+  address = models.CharField(max_length=150)
+
+  def __str__(self):
+    return f"{self.name} {self.address}"
+
 class ItemProvider(models.Model):
   """ItemProvider"""
 
   # Foreign Relations
-  provider = models.ForeignKey(Provider, on_delete=models.CASCADE, blank=True, null=True, related_name="items_providers")
+  provider = models.ManyToManyField(Provider, blank=True, null=True, related_name="items_providers")
   item = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True, related_name="items_providers")
 
   def __str__(self):
