@@ -32,8 +32,6 @@ class ProviderSerializer(serializers.ModelSerializer):
       "address"
     ]
 
-
-
 class ItemProviderSimpleSerializer(serializers.ModelSerializer):
   """ItemProvider"""
   
@@ -41,11 +39,10 @@ class ItemProviderSimpleSerializer(serializers.ModelSerializer):
     model = ItemProvider
     fields = ["provider"]
 
-
 class ItemSerializer(serializers.ModelSerializer):
   """Item"""
   items_providers = ItemProviderSimpleSerializer(many=True)
-  
+
   class Meta:
     model = Item
     fields = [
@@ -76,7 +73,6 @@ class ItemProviderSingleArraySerializer(serializers.ModelSerializer):
       "provider",
     ]
 
-# We create an item with all the providers that it has
 class CreateItemSerializer(serializers.ModelSerializer):
   """Item"""
   items_providers = ItemProviderSingleArraySerializer(many=True)
@@ -89,7 +85,6 @@ class CreateItemSerializer(serializers.ModelSerializer):
     ]
 
   def create(self, validated_data):
-    print("aqui")
     items_providers = validated_data.pop("items_providers")
     providers = items_providers[0].pop("provider")
     
@@ -105,4 +100,28 @@ class CreateItemSerializer(serializers.ModelSerializer):
     
     return item
 
-    
+# Type of centers(Order)
+class DistributionCenterSerializer(serializers.ModelSerializer):
+  """DistributionCenter"""
+  class Meta:
+    model: DistributionCenter
+    fields = "__all__"
+
+class AssociatedCompanySerializer(serializers.ModelSerializer):
+  """DistributionCenter"""
+  class Meta:
+    model: AssociatedCompany
+    fields = "__all__"
+
+class SucursalSerializer(serializers.ModelSerializer):
+  """DistributionCenter"""
+  class Meta:
+    model: Sucursal
+    fields = "__all__"
+
+# Orders
+class OrderSerializer(serializers.ModelSerializer):
+  """DistributionCenter"""
+  class Meta:
+    model: Order
+    fields = "__all__"
