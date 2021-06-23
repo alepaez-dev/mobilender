@@ -16,8 +16,6 @@ class Client(models.Model):
   def __str__(self):
     return f"{self.name} {self.key}"
 
-
-
 class Item(models.Model):
   """Item"""
   description = models.CharField(max_length=150)
@@ -76,7 +74,6 @@ class Order(models.Model):
 
   def __str__(self):
     return f"{self.date_created} {self.is_urgent} {self.client}"
-
 
 class OrderDetails(models.Model):
   quantity = models.PositiveIntegerField()

@@ -34,5 +34,4 @@ urlpatterns = [
     path('api/item/create/', CreateItemAPIView.as_view(), name = "create_item"),
     #ItemProvider
     path('api/itemprovider/', ListItemProviderAPIView.as_view(), name = "list_item_providers"),
-    path('api/itemprovider/create/', CreateItemProviderAPIView.as_view(), name = "create_item_roviders"),
 ]

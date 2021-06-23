@@ -65,6 +65,3 @@ class ListItemProviderAPIView(generics.ListAPIView):
   queryset = ItemProvider.objects.all()
   serializer_class = ItemProviderSerializer
 
-class CreateItemProviderAPIView(generics.CreateAPIView):
-  queryset = ItemProvider.objects.all()
-  serializer_class = ItemProviderSerializer

@@ -36,19 +36,16 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 class ItemProviderSimpleSerializer(serializers.ModelSerializer):
   """ItemProvider"""
-  # provider = ProviderSerializer()
-  # item = ItemSerializer()
+  
   class Meta:
     model = ItemProvider
     fields = ["provider"]
-  
-  def get_queryset(self, *args, **kwargs):
-    print("aaa",args)
-    print("bbb",kwargs)
+
 
 class ItemSerializer(serializers.ModelSerializer):
   """Item"""
   items_providers = ItemProviderSimpleSerializer(many=True)
+  
   class Meta:
     model = Item
     fields = [
