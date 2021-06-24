@@ -11,6 +11,7 @@ from django.contrib.postgres.fields import ArrayField
 # We import all the models
 from .models import *
 
+# Client
 class ClientSerializer(serializers.ModelSerializer):
   """Client"""
   class Meta:
@@ -22,6 +23,8 @@ class ClientSerializer(serializers.ModelSerializer):
       "address"
     ]
 
+
+# Provider
 class ProviderSerializer(serializers.ModelSerializer):
   """Provider"""
   class Meta:
@@ -104,24 +107,57 @@ class CreateItemSerializer(serializers.ModelSerializer):
 class DistributionCenterSerializer(serializers.ModelSerializer):
   """DistributionCenter"""
   class Meta:
-    model: DistributionCenter
-    fields = "__all__"
+    model = DistributionCenter
+    fields = [
+      "warehouse"
+    ]
 
 class AssociatedCompanySerializer(serializers.ModelSerializer):
   """DistributionCenter"""
   class Meta:
-    model: AssociatedCompany
+    model = AssociatedCompany
     fields = "__all__"
 
 class SucursalSerializer(serializers.ModelSerializer):
   """DistributionCenter"""
   class Meta:
-    model: Sucursal
+    model = Sucursal
     fields = "__all__"
 
-# Orders
+
+# Order Detail
+class OrderDetailSerializer(serializers.ModelSerializer):
+  """Order Detail"""
+  class Meta:
+    model = OrderDetail
+    fields = [
+      "id",
+      "quantity",
+      "item"
+    ]
+
+# Order
 class OrderSerializer(serializers.ModelSerializer):
   """DistributionCenter"""
+  orders_details = OrderDetailSerializer(many=True)
+
   class Meta:
-    model: Order
-    fields = "__all__"
+    model = Order
+    fields = [
+      "client",
+      "distribution_center",
+      "associated_company",
+      "sucursal",
+      "date_created",
+      "is_urgent",
+      "orders_details"
+    ]
+  
+  def create(self, validated_data):
+    # We create de order first
+    orders_details = validated_data.pop("orders_details")
+    order = Order.objects.create(**validated_data)
+    # THEN we create the OrderDetail and we pass it our recent created order as a parameter
+    order_detail = OrderDetail.objects.create(order=order, **orders_details[0])
+    return order
+

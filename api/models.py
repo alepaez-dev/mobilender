@@ -43,14 +43,13 @@ class ItemProvider(models.Model):
     return f"{self.id} {self.provider} {self.item}"
 
 class DistributionCenter(models.Model):
-  description = models.CharField(max_length=150)
+  warehouse = models.CharField(max_length=150)
 
   def __str__(self):
-    return f"{self.id} {self.description}"
+    return f"{self.id} {self.warehouse}"
 
 class AssociatedCompany(models.Model):
   references = models.CharField(max_length=150)
-  client_key = models.CharField(max_length=150, null=True, blank=True)
 
   def __str__(self):
     return f"{self.id} {self.references}"
@@ -63,19 +62,19 @@ class Sucursal(models.Model):
 
 class Order(models.Model):
   date_created = models.DateTimeField(auto_now_add=True)
-  date_stocked = models.DateTimeField()
+  date_stocked = models.DateTimeField(null=True, blank=True)
   is_urgent = models.BooleanField(default=False)
 
   # Foreign Relations
   client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="orders")
-  distribution_center = models.ForeignKey(DistributionCenter, on_delete=models.PROTECT, related_name="orders")
-  associated_company = models.ForeignKey(AssociatedCompany, on_delete=models.PROTECT, related_name="orders")
-  sucursal = models.ForeignKey(Sucursal, on_delete=models.PROTECT, related_name="orders")
+  distribution_center = models.ForeignKey(DistributionCenter, on_delete=models.PROTECT, related_name="orders", null=True, blank=True)
+  associated_company = models.ForeignKey(AssociatedCompany, on_delete=models.PROTECT, related_name="orders",  null=True, blank=True)
+  sucursal = models.ForeignKey(Sucursal, on_delete=models.PROTECT, related_name="orders",  null=True, blank=True)
 
   def __str__(self):
     return f"{self.date_created} {self.is_urgent} {self.client}"
 
-class OrderDetails(models.Model):
+class OrderDetail(models.Model):
   quantity = models.PositiveIntegerField()
 
   # Foreign Relations

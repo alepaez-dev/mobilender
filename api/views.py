@@ -65,3 +65,47 @@ class ListItemProviderAPIView(generics.ListAPIView):
   queryset = ItemProvider.objects.all()
   serializer_class = ItemProviderSerializer
 
+## DistributionCenter
+class ListDistributionCenterAPIView(generics.ListAPIView):
+  queryset = DistributionCenter.objects.all()
+  serializer_class = DistributionCenterSerializer
+
+class CreateDistributionCenterAPIView(generics.CreateAPIView):
+  queryset = DistributionCenter.objects.all()
+  serializer_class = DistributionCenterSerializer
+
+## AssociatedCompany
+class ListAssociatedCompanyAPIView(generics.ListAPIView):
+  queryset = AssociatedCompany.objects.all()
+  serializer_class = AssociatedCompanySerializer
+
+class CreateAssociatedCompanyAPIView(generics.CreateAPIView):
+  queryset = AssociatedCompany.objects.all()
+  serializer_class = AssociatedCompanySerializer
+
+## Sucursal
+class ListSucursalAPIView(generics.ListAPIView):
+  queryset = Sucursal.objects.all()
+  serializer_class = SucursalSerializer
+
+class CreateSucursalAPIView(generics.CreateAPIView):
+  queryset = Sucursal.objects.all()
+  serializer_class = SucursalSerializer
+
+## Order
+class ListOrderAPIView(generics.ListAPIView):
+  queryset = Order.objects.all()
+  serializer_class = OrderSerializer
+
+class CreateOrderAPIView(generics.CreateAPIView):
+  queryset = Order.objects.all()
+  serializer_class = OrderSerializer
+
+## Order Detail
+class ListOrderDetailAPIView(generics.ListAPIView):
+  queryset = OrderDetail.objects.all()
+  serializer_class = OrderDetailSerializer
+
+class CreateOrderDetailAPIView(generics.CreateAPIView):
+  queryset = OrderDetail.objects.all()
+  serializer_class = OrderDetailSerializer

@@ -28,10 +28,25 @@ urlpatterns = [
     path('api/client/create/', CreateClientAPIView.as_view(), name = "create_clients"),
     #Provider
     path('api/provider/', ListProviderAPIView.as_view(), name = "list_providers"),
-    path('api/provider/create/', CreateProviderAPIView.as_view(), name = "create_providers"),
+    path('api/provider/create/', CreateProviderAPIView.as_view(), name = "create_provider"),
     #Item
-    path('api/item/', ListItemAPIView.as_view(), name = "list_item"),
+    path('api/item/', ListItemAPIView.as_view(), name = "list_items"),
     path('api/item/create/', CreateItemAPIView.as_view(), name = "create_item"),
     #ItemProvider
-    path('api/itemprovider/', ListItemProviderAPIView.as_view(), name = "list_item_providers"),
+    path('api/itemprovider/', ListItemProviderAPIView.as_view(), name = "list_items_providers"),
+    #DistributionCenter
+    path('api/distribution_center/', ListDistributionCenterAPIView.as_view(), name = "list_distribution_centers"),
+    path('api/distribution_center/create/', CreateDistributionCenterAPIView.as_view(), name = "create_distribution_center"),
+    #AssociatedCompany
+    path('api/associated_company/', ListAssociatedCompanyAPIView.as_view(), name = "list_associated_company"),
+    path('api/associated_company/create/', CreateAssociatedCompanyAPIView.as_view(), name = "create_associated_companies"),
+    #Sucursal
+    path('api/sucursal/', ListSucursalAPIView.as_view(), name = "list_sucursal"),
+    path('api/sucursal/create/', CreateSucursalAPIView.as_view(), name = "create_sucursal"),
+    #Order
+    path('api/order/', ListOrderAPIView.as_view(), name = "list_orders"),
+    path('api/order/create/', CreateOrderAPIView.as_view(), name = "create_order"),
+    #OrderDetail
+    path('api/orderdetail/', ListOrderDetailAPIView.as_view(), name = "list_order_details"),
+    path('api/orderdetail/create/', CreateOrderDetailAPIView.as_view(), name = "create_order_details"),
 ]
