@@ -8,10 +8,19 @@ from rest_framework import serializers
 
 class Client(models.Model):
   """Client"""
+
+  CLIENT_TYPES = (
+      ("normal", "Normal"),
+      ("plate", "Plate"),
+      ("gold", "Gold"),
+      ("platinum", "Platinum"),
+  )
   name = models.CharField(max_length=150)
+  type_client = models.CharField(max_length=10, choices=CLIENT_TYPES, default="normal")
   key = models.CharField(max_length=50, null=True, blank=True)
   photography = models.ImageField(null=True, blank=True)
   address = models.CharField(max_length=150)
+  
 
   def __str__(self):
     return f"{self.name} {self.key}"
