@@ -18,10 +18,12 @@ class ClientSerializer(serializers.ModelSerializer):
   class Meta:
     model = Client
     fields = [
+      "id",
       "name",
       "key",
       "photography",
-      "address"
+      "address",
+      "type_client"
     ]
 
 
@@ -207,8 +209,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
   def update(self, instance, validated_data):
     # First we validate the date_stocked is not before the date_created of the order
-    if validated_data["date_stocked"] < instance.date_created:
-      raise ValidationError("The entered date_stocked has to be after the date_created")
+    try:
+      if validated_data["date_stocked"] < instance.date_created:
+        raise ValidationError("The entered date_stocked has to be after the date_created")
+    except:
+      print("Not valid format")
     
     # We check where is going to be the order
     # Wherever it is, we check the other 2 as None. EX: if it's distribution center, we check associated company and sucursal as None

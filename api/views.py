@@ -4,6 +4,9 @@ import os
 import sys, json
 from rest_framework import viewsets
 from django.http import JsonResponse
+from django.db.models import F
+from django.db.models import Q
+import datetime
 
 # We import all models
 from .models import *
@@ -96,6 +99,12 @@ class CreateSucursalAPIView(generics.CreateAPIView):
 class ListOrderAPIView(generics.ListAPIView):
   queryset = Order.objects.all()
   serializer_class = GetOrderSerializer
+
+class ListSpecialPlatinumOrdersAPIView(generics.ListAPIView):
+  date_today = datetime.date.today()
+  queryset = Order.objects.filter(client__type_client="platinum").exclude(distribution_center=None).exclude(is_urgent=False).filter(Q(date_stocked__lte=date_today) | Q(date_stocked=None))
+  serializer_class = GetOrderSerializer
+  
 
 class RetrieveOrderAPIView(generics.RetrieveAPIView):
   queryset = Order.objects.all()
