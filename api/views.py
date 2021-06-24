@@ -95,12 +95,20 @@ class CreateSucursalAPIView(generics.CreateAPIView):
 ## Order
 class ListOrderAPIView(generics.ListAPIView):
   queryset = Order.objects.all()
-  serializer_class = OrderSerializer
+  serializer_class = GetOrderSerializer
+
+class RetrieveOrderAPIView(generics.RetrieveAPIView):
+  queryset = Order.objects.all()
+  serializer_class = GetOrderSerializer
 
 class CreateOrderAPIView(generics.CreateAPIView):
   queryset = Order.objects.all()
   serializer_class = OrderSerializer
 
+class UpdateOrderAPIView(generics.UpdateAPIView):
+  queryset = Order.objects.all()
+  serializer_class = OrderSerializer
+  
 ## Order Detail
 class ListOrderDetailAPIView(generics.ListAPIView):
   queryset = OrderDetail.objects.all()
@@ -109,3 +117,4 @@ class ListOrderDetailAPIView(generics.ListAPIView):
 class CreateOrderDetailAPIView(generics.CreateAPIView):
   queryset = OrderDetail.objects.all()
   serializer_class = OrderDetailSerializer
+

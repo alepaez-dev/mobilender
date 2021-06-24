@@ -2,6 +2,7 @@
 from rest_framework import serializers
 import os
 from django.contrib.postgres.fields import ArrayField
+from rest_framework.exceptions import ValidationError, ParseError
 
 # In this file, we allow data as querysets and models instances and we render them into JSON data.
 # Here we also validate and control de output(logic) of the responses.
@@ -53,6 +54,16 @@ class ItemSerializer(serializers.ModelSerializer):
       "description",
       "price",
       "items_providers"
+    ]
+
+class GetItemSerializer(serializers.ModelSerializer):
+  """Item"""
+
+  class Meta:
+    model = Item
+    fields = [
+      "description",
+      "price",
     ]
 
 class ItemProviderSerializer(serializers.ModelSerializer):
@@ -131,28 +142,61 @@ class OrderDetailSerializer(serializers.ModelSerializer):
   class Meta:
     model = OrderDetail
     fields = [
-      "id",
       "quantity",
       "item"
     ]
 
-# Order
-class OrderSerializer(serializers.ModelSerializer):
-  """DistributionCenter"""
-  orders_details = OrderDetailSerializer(many=True)
+class GetOrderDetailItemSerializer(serializers.ModelSerializer):
+  """Order Detail"""
+  item = GetItemSerializer()
+  class Meta:
+    model = OrderDetail
+    fields = [
+      "quantity",
+      "item"
+    ]
 
+# Order with more specify details of all foreign keys serializers
+class GetOrderSerializer(serializers.ModelSerializer):
+  """Order"""
+  distribution_center = DistributionCenterSerializer()
+  associated_company = AssociatedCompanySerializer()
+  sucursal = SucursalSerializer()
+  client = ClientSerializer()
+  orders_details = GetOrderDetailItemSerializer(many=True)
+  
   class Meta:
     model = Order
     fields = [
+      "id",
       "client",
       "distribution_center",
       "associated_company",
       "sucursal",
       "date_created",
+      "date_stocked",
       "is_urgent",
       "orders_details"
     ]
-  
+
+# Order
+class OrderSerializer(serializers.ModelSerializer):
+  """Order"""
+  orders_details = OrderDetailSerializer(many=True)
+
+  class Meta:
+    model = Order
+    fields = [
+      "id",
+      "client",
+      "distribution_center",
+      "associated_company",
+      "sucursal",
+      "date_created",
+      "date_stocked",
+      "is_urgent",
+      "orders_details"
+    ]
   def create(self, validated_data):
     # We create de order first
     orders_details = validated_data.pop("orders_details")
@@ -160,4 +204,22 @@ class OrderSerializer(serializers.ModelSerializer):
     # THEN we create the OrderDetail and we pass it our recent created order as a parameter
     order_detail = OrderDetail.objects.create(order=order, **orders_details[0])
     return order
+
+  def update(self, instance, validated_data):
+    # First we validate the date_stocked is not before the date_created of the order
+    if validated_data["date_stocked"] < instance.date_created:
+      raise ValidationError("The entered date_stocked has to be after the date_created")
+    
+    # We check where is going to be the order
+    # Wherever it is, we check the other 2 as None. EX: if it's distribution center, we check associated company and sucursal as None
+    if validated_data.get('distribution_center'):
+      validated_data["associated_company"] = None
+      validated_data["sucursal"] = None
+    elif validated_data.get('associated_company'):
+      validated_data["distribution_center"] = None
+      validated_data["sucursal"] = None
+    elif validated_data.get('sucursal'):
+      validated_data["distribution_center"] = None
+      validated_data["associated_company"] = None
+    return super().update(instance, validated_data)
 

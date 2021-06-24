@@ -60,9 +60,10 @@ class Sucursal(models.Model):
   def __str__(self):
     return f"{self.id} {self.references}"
 
+
 class Order(models.Model):
-  date_created = models.DateTimeField(auto_now_add=True)
-  date_stocked = models.DateTimeField(null=True, blank=True)
+  date_created = models.DateField(auto_now_add=True)
+  date_stocked = models.DateField(null=True, blank=True)
   is_urgent = models.BooleanField(default=False)
 
   # Foreign Relations
@@ -78,5 +79,5 @@ class OrderDetail(models.Model):
   quantity = models.PositiveIntegerField()
 
   # Foreign Relations
-  item = models.ForeignKey(Item, on_delete=models.PROTECT, related_name="orders_details")
-  order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="orders_details")
+  item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="orders_details")
+  order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orders_details")
