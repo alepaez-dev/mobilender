@@ -101,10 +101,16 @@ class ListOrderAPIView(generics.ListAPIView):
   serializer_class = GetOrderSerializer
 
 class ListSpecialPlatinumOrdersAPIView(generics.ListAPIView):
-  date_today = datetime.date.today()
-  queryset = Order.objects.filter(client__type_client="platinum").exclude(distribution_center=None).exclude(is_urgent=False).filter(Q(date_stocked__lte=date_today) | Q(date_stocked=None))
   serializer_class = GetOrderSerializer
-  
+
+  def get_queryset(self):
+    """Filtering with the URL"""
+    date_today = datetime.date.today()
+    is_urgent = self.kwargs["pq"]
+    client = self.kwargs["pk"]
+    is_urgent = is_urgent.capitalize()
+    return Order.objects.filter(client__type_client=client).exclude(distribution_center=None).filter(is_urgent=is_urgent).filter(Q(date_stocked__lte=date_today) | Q(date_stocked=None))
+    
 
 class RetrieveOrderAPIView(generics.RetrieveAPIView):
   queryset = Order.objects.all()

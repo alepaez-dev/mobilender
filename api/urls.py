@@ -45,7 +45,7 @@ urlpatterns = [
     path('api/sucursal/create/', CreateSucursalAPIView.as_view(), name = "create_sucursal"),
     #Order
     path('api/order/', ListOrderAPIView.as_view(), name = "list_orders"),
-    path('api/order/platinum/', ListSpecialPlatinumOrdersAPIView.as_view(), name = "list_special_orders"),
+    path('api/order/client=<str:pk>/is_urgent=<str:pq>/', ListSpecialPlatinumOrdersAPIView.as_view(), name = "list_special_orders"),
     path('api/order/create/', CreateOrderAPIView.as_view(), name = "create_order"),
     path('api/order/<int:pk>/', RetrieveOrderAPIView.as_view(), name = "retrieve_order"),
     path('api/order/<int:pk>/update/', UpdateOrderAPIView.as_view(), name = "update_order"),
