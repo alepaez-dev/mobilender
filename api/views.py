@@ -25,6 +25,10 @@ class CreateClientAPIView(generics.CreateAPIView):
   queryset = Client.objects.all()
   serializer_class = ClientSerializer
 
+class UpdateRetrieveDeleteClientAPIView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Client.objects.all()
+  serializer_class = ClientSerializer
+
 ## Provider
 class ListProviderAPIView(generics.ListAPIView):
   queryset = Provider.objects.all()
@@ -34,11 +38,15 @@ class CreateProviderAPIView(generics.CreateAPIView):
   queryset = Provider.objects.all()
   serializer_class = ProviderSerializer
 
+class UpdateRetrieveDeleteProviderAPIView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Provider.objects.all()
+  serializer_class = ProviderSerializer
+
 ## Item
 class ListItemAPIView(generics.ListAPIView):
   serializer_class = ItemSerializer
 
-  # Overiding method LIST to skip item_providers intersection and make it more readable
+  # Overriding method LIST to skip item_providers intersection and make a JSON more readable 
   def list(self, request, *args, **kwargs):
     items =Item.objects.all()
     data = self.get_serializer(items, many=True).data
@@ -51,7 +59,7 @@ class ListItemAPIView(generics.ListAPIView):
       # We extract items_providers
       items_providers = item.pop("items_providers")
       for provider in items_providers:
-        # We get the providers id and do the query to extract all the instance
+        # We get the providers id and do the query to get all the provider query
         provider_id = provider["provider"][0]
         new_provider = Provider.objects.get(id=provider_id)
         # We append it with the Json Format we prefer
@@ -103,14 +111,16 @@ class ListOrderAPIView(generics.ListAPIView):
 class ListSpecialPlatinumOrdersAPIView(generics.ListAPIView):
   serializer_class = GetOrderSerializer
 
+  # Get the relation of urgents orders that are from DistributionCenters and are from platinum clients also checking that they are not stocked.
   def get_queryset(self):
     """Filtering with the URL"""
     date_today = datetime.date.today()
+    # the type of client and is_urgent parameters can change depending on the url just in case the administrator wants to check other queries.
     is_urgent = self.kwargs["pq"]
     client = self.kwargs["pk"]
+    # JSON booleans are lowercase, for python we need to capitalize it(true=True, false=False)
     is_urgent = is_urgent.capitalize()
     return Order.objects.filter(client__type_client=client).exclude(distribution_center=None).filter(is_urgent=is_urgent).filter(Q(date_stocked__lte=date_today) | Q(date_stocked=None))
-    
 
 class RetrieveOrderAPIView(generics.RetrieveAPIView):
   queryset = Order.objects.all()

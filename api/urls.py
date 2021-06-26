@@ -17,21 +17,25 @@ from django.urls import path, include
 from rest_framework.authtoken import views 
 from rest_framework.routers import DefaultRouter
 from rest_framework_swagger.views import get_swagger_view
-from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls.static import static
 
 from .views import *
 
+# We create the view for the swagger documentation
+schema_view = get_swagger_view(title='Mobilender API')
 
-schema_view = get_swagger_view(title='Pastebin API')
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/swagger/', schema_view),
+    path('', schema_view),
     #Client 
     path('api/client/', ListClientAPIView.as_view(), name = "list_clients"),
     path('api/client/create/', CreateClientAPIView.as_view(), name = "create_clients"),
+    path('api/client/<int:pk>/update/', UpdateRetrieveDeleteClientAPIView.as_view(), name = "update_client"),
     #Provider
     path('api/provider/', ListProviderAPIView.as_view(), name = "list_providers"),
     path('api/provider/create/', CreateProviderAPIView.as_view(), name = "create_provider"),
+    path('api/provider/<int:pk>/update/', UpdateRetrieveDeleteProviderAPIView.as_view(), name = "update_provider"),
     #Item
     path('api/item/', ListItemAPIView.as_view(), name = "list_items"),
     path('api/item/create/', CreateItemAPIView.as_view(), name = "create_item"),
@@ -55,4 +59,4 @@ urlpatterns = [
     #OrderDetail
     path('api/orderdetail/', ListOrderDetailAPIView.as_view(), name = "list_order_details"),
     path('api/orderdetail/create/', CreateOrderDetailAPIView.as_view(), name = "create_order_details"),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

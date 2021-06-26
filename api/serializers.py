@@ -157,7 +157,7 @@ class GetOrderDetailItemSerializer(serializers.ModelSerializer):
       "item"
     ]
 
-# Order with more specify details of all foreign keys serializers
+# Order with more specific details of all foreign keys serializers
 class GetOrderSerializer(serializers.ModelSerializer):
   """Order"""
   distribution_center = DistributionCenterSerializer()
@@ -202,7 +202,7 @@ class OrderSerializer(serializers.ModelSerializer):
     # We create de order first
     orders_details = validated_data.pop("orders_details")
     order = Order.objects.create(**validated_data)
-    # THEN we create the OrderDetail and we pass it our recent created order as a parameter
+    # THEN we create the OrderDetail and we pass it our recent created order as a relation
     order_detail = OrderDetail.objects.create(order=order, **orders_details[0])
     return order
 
@@ -215,7 +215,7 @@ class OrderSerializer(serializers.ModelSerializer):
       print("Not valid format")
     
     # We check where is going to be the order
-    # Wherever it is, we check the other 2 as None. EX: if it's distribution center, we check associated company and sucursal as None
+    # Wherever it is, we assign the other 2 as None. EX: if it's in distribution center, we assign associated company and sucursal as None
     if validated_data.get('distribution_center'):
       validated_data["associated_company"] = None
       validated_data["sucursal"] = None

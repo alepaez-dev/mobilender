@@ -59,6 +59,7 @@ class DistributionCenter(models.Model):
 
 class AssociatedCompany(models.Model):
   references = models.CharField(max_length=150)
+  client_key = models.CharField(max_length=150, null=True, blank=True)
 
   def __str__(self):
     return f"{self.id} {self.references}"
