@@ -132,4 +132,3 @@ class ListOrderDetailAPIView(generics.ListAPIView):
 class CreateOrderDetailAPIView(generics.CreateAPIView):
   queryset = OrderDetail.objects.all()
   serializer_class = OrderDetailSerializer
-

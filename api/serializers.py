@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 import os
 from django.contrib.postgres.fields import ArrayField
@@ -227,4 +226,3 @@ class OrderSerializer(serializers.ModelSerializer):
       validated_data["distribution_center"] = None
       validated_data["associated_company"] = None
     return super().update(instance, validated_data)
-

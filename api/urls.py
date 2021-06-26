@@ -1,5 +1,4 @@
 """api URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
 Examples:
@@ -17,12 +16,16 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views 
 from rest_framework.routers import DefaultRouter
+from rest_framework_swagger.views import get_swagger_view
+from django.conf.urls import url
 
 from .views import *
 
 
+schema_view = get_swagger_view(title='Pastebin API')
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/swagger/', schema_view),
     #Client 
     path('api/client/', ListClientAPIView.as_view(), name = "list_clients"),
     path('api/client/create/', CreateClientAPIView.as_view(), name = "create_clients"),

@@ -4,22 +4,23 @@ services:
     build: .
     volumes:
       - .:/django
+      - .:/api
     ports:
       - 8000:8000
     image: app:django
-    container_name: django_container
+    container_name: django_container_v2
     command: python manage.py runserver 0.0.0.0:8000
     depends_on: 
       - db
   db:
-    container_name: postgres_db
+    container_name: postgres_db_2
     image: postgres
     restart: always
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - ./data/db:/var/lib/postgresql_2/data
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
       - POSTGRES_PORT:5432
-      - POSTGRES_DB:postgres
+      - POSTGRES_DB:postgres_db_2
       - POSTGRES_USER:postgres
       - POSTGRES_PASSWORD:postgres
